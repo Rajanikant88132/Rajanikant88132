@@ -1,0 +1,41 @@
+[user@host ~]$ oc get templates -n openshift
+[user@host ~]$ oc get template mysql-persistent -n openshift -o yaml
+[user@host deploy-multicontainer]$ oc create -f todo-template.yaml
+[user@host deploy-multicontainer]$ oc create -f todo-template.yaml \
+> -n openshift
+[user@host ~]$ oc describe template mysql-persistent -n openshift
+[user@host ~]$ oc process --parameters mysql-persistent -n openshift
+[user@host ~]$ oc process -f <filename> defalt is json 
+
+[user@host ~]$ oc process -o yaml -f <filename>
+
+[user@host ~]$ oc process -o yaml -f mysql.yaml \
+> -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi > mysqlProcessed.yaml
+
+
+[user@host ~]$ oc create -f mysqlProcessed.yaml
+
+
+[user@host ~]$ oc process -f mysql.yaml -p MYSQL_USER=dev \
+> -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi | oc create -f -
+
+
+[user@host ~]$ oc get template mysql-persistent -o yaml \
+> -n openshift > mysql-persistent-template.yaml
+
+
+[user@host ~]$ oc process -f mysql-persistent-template.yaml \
+> -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi | oc create -f -
+
+
+[user@host ~]$ oc process openshift//mysql-persistent \
+> -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi | oc create -f -
+
+
+[user@host ~]$ oc new-app --template=mysql-persistent \
+> -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi
